@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyzers Market - FAQ</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================
+   BASE
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#050505;
+    color:#fff;
+    min-height:100vh;
+}
+
+/* =========================
+   LOADER (optional but kept consistent)
+========================= */
+
+.loader{
+    position:fixed;
+    inset:0;
+    background:#050505;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:99999;
+    transition:opacity .7s ease, visibility .7s ease;
+}
+
+.loader.hidden{
+    opacity:0;
+    visibility:hidden;
+}
+
+.spinner{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    border:3px solid rgba(255,255,255,.1);
+    border-top:3px solid #7c3aed;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    min-height:100svh;
+    padding:120px 20px;
+    display:flex;
+    justify-content:center;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+
+/* background */
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.95)),
+        url("rocketleague-bg.jpg");
+    background-size:cover;
+    background-position:center;
+    filter:blur(3px);
+    transform:scale(1.08);
+    z-index:-2;
+}
+
+/* glow */
+.hero::after{
+    content:"";
+    position:absolute;
+    width:800px;
+    height:800px;
+    left:50%;
+    top:40%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(124,58,237,.18),transparent 70%);
+    filter:blur(120px);
+    z-index:-1;
+}
+
+/* ===== SLOW LOAD EFFECT ===== */
+
+.hero {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: 1s ease;
+}
+
+.hero.loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* content fade in */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.8s ease;
+}
+
+.reveal.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.particles{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+}
+
+.particle{
+    position:absolute;
+    top:-20px;
+    border-radius:50%;
+    background:rgba(167,139,250,.35);
+    filter:blur(1px);
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    0%{transform:translateY(-20px); opacity:0;}
+    10%{opacity:1;}
+    100%{transform:translateY(120vh); opacity:0;}
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    position:fixed;
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(1100px,92%);
+    padding:14px 20px;
+    border-radius:16px;
+    background:rgba(10,10,10,.55);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.06);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo-text{
+    font-family:'Montserrat',sans-serif;
+    font-weight:800;
+    font-size:20px;
+}
+
+.nav-links{
+    display:flex;
+    gap:12px;
+}
+
+.nav-link{
+    text-decoration:none;
+    color:rgba(255,255,255,.75);
+    padding:10px 16px;
+    border-radius:12px;
+    transition:.25s;
+}
+
+.nav-link:hover{
+    background:rgba(124,58,237,.1);
+    color:#fff;
+}
+
+.nav-link.active{
+    background:linear-gradient(180deg,rgba(124,58,237,.45),rgba(124,58,237,.22));
+    color:#fff;
+}
+
+@media (max-width: 768px) {
+
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 14px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .nav-link {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+
+    .logo-text {
+        font-size: 18px;
+    }
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+    width:100%;
+    max-width:900px;
+    margin-top:80px;
+}
+
+h1{
+    font-family:'Montserrat',sans-serif;
+    font-size:clamp(2.5rem,5vw,4rem);
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#b8b8b8;
+    margin-bottom:40px;
+}
+
+/* =========================
+   FAQ
+========================= */
+
+.faq{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    text-align:left;
+}
+
+.faq-item{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.faq-question{
+    padding:18px;
+    cursor:pointer;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.faq-question:hover{
+    background:rgba(124,58,237,.08);
+}
+
+.faq-answer{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .4s ease, padding .4s ease;
+    padding:0 18px;
+    color:#cfcfcf;
+}
+
+.faq-item.active .faq-answer{
+    max-height:200px;
+    padding:0 18px 18px 18px;
+}
+
+.arrow{
+    transition:.3s;
+}
+
+.faq-item.active .arrow{
+    transform:rotate(180deg);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="loader" id="loader">
+    <div class="spinner"></div>
+</div>
+
+<section class="hero">
+
+<div class="particles" id="particles"></div>
+
+<nav class="navbar">
+    <div class="logo-text">Kyzers Market</div>
+
+    <div class="nav-links">
+        <a class="nav-link" href="Kyzers_Market_Home.html">Home</a>
+        <a class="nav-link" href="Kyzers_Market_Products.html">Products</a>
+        <a class="nav-link active" href="#">FAQ</a>
+        <a class="nav-link" href="Kyzers_Market_About.html">About</a>
+    </div>
+</nav>
+
+<div class="content reveal">
+
+<h1>FAQ</h1>
+<p class="subtitle">Everything you need to know before buying.</p>
+
+<div class="faq reveal">
+
+    <div class="faq-item faq reveal">
+        <div class="faq-question">
+            How fast is delivery?
+            <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+            Delivery is instant on most products after purchase.
+        </div>
+    </div>
+
+    <div class="faq-item faq reveal">
+        <div class="faq-question">
+            Is this safe / legit?
+            <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+            Yes, everything is legit, delivered securely and trusted by hundreds of players.
+        </div>
+    </div>
+
+    <div class="faq-item faq reveal">
+        <div class="faq-question">
+            Do I get support?
+            <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+            Yes, support is available for all customers.
+        </div>
+    </div>
+
+    <div class="faq-item faq reveal">
+        <div class="faq-question">
+            How do I get support?
+            <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+            Just text @kyzer_rl on discord for any questions / issues with products! 
+        </div>
+    </div>
+
+    <div class="faq-item faq reveal">
+        <div class="faq-question">
+            Can I get a refund?
+            <span class="arrow">▼</span>
+        </div>
+        <div class="faq-answer">
+            We do not offer refunds but in some cases we do replace products.
+        </div>
+    </div>
+
+</div>
+
+</div>
+</section>
+
+<script>
+
+// loader
+window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
+    const particles = document.getElementById("particles");
+
+    setTimeout(() => {
+        loader.classList.add("hidden");
+
+        // HERO fade in
+        document.querySelector(".hero").classList.add("loaded");
+
+        // STAGGER content
+        document.querySelectorAll(".reveal").forEach((el, i) => {
+            setTimeout(() => {
+                el.classList.add("show");
+            }, i * 120);
+        });
+
+    }, 700);
+
+    // particles (your original code stays same)
+    if (particles) {
+        for (let i = 0; i < 50; i++) {
+            const p = document.createElement("div");
+            p.classList.add("particle");
+
+            const size = Math.random() * 5 + 2;
+
+            p.style.width = size + "px";
+            p.style.height = size + "px";
+
+            p.style.left = Math.random() * 100 + "%";
+            p.style.animationDuration = (Math.random() * 15 + 10) + "s";
+            p.style.animationDelay = (Math.random() * -20) + "s";
+            p.style.opacity = Math.random() * 0.5 + 0.2;
+
+            particles.appendChild(p);
+        }
+    }
+});
+
+// FAQ toggle
+document.querySelectorAll(".faq-question").forEach(q => {
+    q.addEventListener("click", () => {
+        q.parentElement.classList.toggle("active");
+    });
+});
+
+</script>
+
+</body>
+</html>
