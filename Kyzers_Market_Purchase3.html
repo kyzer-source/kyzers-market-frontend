@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyzers Market - Checkout</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   BASE
+========================= */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#050505;color:#fff;min-height:100vh;}
+
+/* =========================
+   LOADER
+========================= */
+.loader{position:fixed;inset:0;background:#050505;display:flex;align-items:center;justify-content:center;z-index:99999;transition:opacity .7s ease, visibility .7s ease;}
+.loader.hidden{opacity:0;visibility:hidden;}
+.spinner{width:60px;height:60px;border-radius:50%;border:3px solid rgba(255,255,255,.1);border-top:3px solid #7c3aed;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* =========================
+   HERO
+========================= */
+.hero{min-height:100svh;padding:120px 20px;display:flex;justify-content:center;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.95)),url("rocketleague-bg.jpg");background-size:cover;background-position:center;filter:blur(3px);transform:scale(1.08);z-index:-2;}
+.hero::after{content:"";position:absolute;width:800px;height:800px;left:50%;top:40%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(124,58,237,.18),transparent 70%);filter:blur(120px);z-index:-1;}
+.hero {opacity: 0; transform: translateY(25px); transition: 1s ease;}
+.hero.loaded {opacity: 1; transform: translateY(0);}
+.reveal {opacity: 0; transform: translateY(20px); transition: 0.8s ease;}
+.reveal.show {opacity: 1; transform: translateY(0);}
+
+/* =========================
+   PARTICLES
+========================= */
+.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.particle{position:absolute;top:-20px;border-radius:50%;background:rgba(167,139,250,.35);animation:fall linear infinite;filter:blur(1px);}
+@keyframes fall{0%{transform:translateY(-20px);opacity:0;}10%{opacity:1;}100%{transform:translateY(120vh);opacity:0;}}
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar{position:fixed;top:16px;left:50%;transform:translateX(-50%);width:min(1100px,92%);padding:14px 20px;border-radius:16px;background:rgba(10,10,10,.55);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;z-index:100;}
+.logo-text{font-family:'Montserrat',sans-serif;font-weight:800;font-size:20px;}
+.nav-links{display:flex;gap:12px;align-items:center;}
+.nav-link{text-decoration:none;color:rgba(255,255,255,.75);padding:10px 16px;border-radius:12px;transition:.25s ease;font-size:15px;}
+.nav-link:hover{background:rgba(124,58,237,.1);color:#fff;}
+.nav-link.active{background:linear-gradient(180deg,rgba(124,58,237,.45),rgba(124,58,237,.22));color:#fff;border:1px solid rgba(167,139,250,.18);}
+
+@media (max-width: 768px){
+    .navbar{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px;padding:12px 14px;}
+    .nav-links{flex-wrap:wrap;justify-content:center;gap:8px;}
+    .nav-link{font-size:13px;padding:8px 12px;}
+    .logo-text{font-size:18px;}
+}
+
+/* =========================
+   CHECKOUT STYLES
+========================= */
+.content{max-width:1000px;width:100%;margin-top:80px;padding:0 20px;}
+h1{font-family:'Montserrat',sans-serif;font-size:clamp(2.5rem,5vw,4rem);margin-bottom:10px;}
+.subtitle{color:#b8b8b8;margin-bottom:40px;}
+
+.checkout-container{display:grid;grid-template-columns:1.25fr .85fr;gap:30px;align-items:start;margin-top:20px;}
+.product-panel,.checkout-panel{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(20px);border-radius:24px;}
+.product-panel{overflow:hidden;}
+.product-details{padding:0 20px 24px;}
+.rating{color:#ffd54a;font-size:14px;display:block;margin-bottom:12px;}
+.product-details h3{font-family:'Montserrat',sans-serif;margin-bottom:12px;}
+.product-details p{color:#bdbdbd;line-height:1.7;}
+
+.checkout-panel{padding:24px;}
+.viewing-box{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:14px;border-radius:14px;margin-bottom:25px;}
+.online-dot{width:10px;height:10px;border-radius:50%;background:#22c55e;}
+.plan-list{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
+.plan-card{position:relative;display:flex;justify-content:space-between;align-items:center;padding:20px;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);cursor:pointer;transition:.25s;}
+.plan-card:hover{border-color:#7c3aed;transform:translateY(-2px);}
+.plan-card input{display:none;}
+.plan-card:has(input:checked){
+    border-color:#7c3aed;
+    background:rgba(124,58,237,.12);
+    box-shadow:0 0 25px rgba(124,58,237,.25);
+}
+
+.product-hero{
+    position:relative;
+    width:100%;
+    aspect-ratio: 16/10;
+    overflow:hidden;
+    border-radius:24px;
+    background:rgba(255,255,255,.02);
+}
+
+.product-hero img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:scale(1.05);
+}
+
+/* soft glow like your reference image */
+.image-glow{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 50% 30%, rgba(124,58,237,.35), transparent 60%);
+    pointer-events:none;
+}
+
+/* smoother spacing under image */
+.product-details{
+    padding:18px 20px 24px;
+}
+
+/* =========================
+   BEST VALUE FIX (BADGE REPOSITIONED)
+========================= */
+
+.plan-card.best-value{
+    border-color: rgba(124,58,237,.35);
+}
+
+.plan-card.best-value .badge{
+    position:absolute;
+    top:-12px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#7c3aed;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.6px;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+
+/* optional extra emphasis */
+.plan-card.best-value:hover{
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* =========================
+   REST
+========================= */
+.checkout-input{width:100%;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:#fff;outline:none;margin-bottom:18px;}
+.checkout-input:focus{border-color:#7c3aed;}
+.buy-button{width:100%;border:none;cursor:pointer;padding:18px;border-radius:18px;font-size:18px;font-weight:700;color:#fff;background:linear-gradient(135deg,#7c3aed,#4f46e5);transition:.25s;}
+.buy-button:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(124,58,237,.4);}
+.delivery-note{text-align:center;color:#a0a0a0;font-size:13px;margin-top:12px;}
+.checkout-icons{display:flex;justify-content:space-between;margin-top:24px;gap:10px;flex-wrap:wrap;color:#bdbdbd;font-size:13px;}
+
+/* =========================
+   MOBILE IMPROVEMENTS
+========================= */
+@media (max-width: 768px){
+
+    /* HERO spacing fix */
+    .hero{
+        padding: 90px 14px 40px;
+        text-align:left;
+    }
+
+    h1{
+        font-size: 2.2rem;
+    }
+
+    .subtitle{
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+
+    /* STACK layout already good, refine spacing */
+    .checkout-container{
+        gap: 18px;
+        margin-top: 10px;
+    }
+
+    /* make panels feel less bulky */
+    .product-panel,
+    .checkout-panel{
+        border-radius: 18px;
+    }
+
+    .checkout-panel{
+        padding: 18px;
+    }
+
+    /* image becomes tighter + more “mobile card-like” */
+    .product-hero{
+        border-radius: 18px;
+        aspect-ratio: 16/11;
+    }
+
+    /* product text spacing */
+    .product-details{
+        padding: 14px 14px 18px;
+    }
+
+    .product-details h3{
+        font-size: 18px;
+    }
+
+    .product-details p{
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* plan cards become easier to tap */
+    .plan-card{
+        padding: 16px;
+        border-radius: 14px;
+        font-size: 14px;
+    }
+
+    .plan-card strong{
+        font-size: 14px;
+    }
+
+    /* input + button thumb-friendly */
+    .checkout-input{
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .buy-button{
+        padding: 16px;
+        font-size: 16px;
+        border-radius: 14px;
+    }
+
+    /* navbar becomes compact pill style */
+    .navbar{
+        top: 10px;
+        width: calc(100% - 20px);
+        border-radius: 14px;
+        padding: 10px 12px;
+    }
+
+    .nav-links{
+        gap: 6px;
+    }
+
+    .nav-link{
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 10px;
+    }
+
+    .logo-text{
+        font-size: 16px;
+    }
+
+    /* prevent horizontal squeeze */
+    .checkout-icons{
+        justify-content: flex-start;
+        gap: 14px;
+        font-size: 12px;
+    }
+}
+
+/* extra small phones */
+@media (max-width: 380px){
+    h1{ font-size: 1.9rem; }
+
+    .plan-card{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .plan-card strong{
+        align-self: flex-end;
+    }
+}
+
+@media (max-width:900px){
+    .checkout-container{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+<div class="loader" id="loader"><div class="spinner"></div></div>
+
+<section class="hero">
+<div class="particles" id="particles"></div>
+
+<nav class="navbar">
+    <div class="logo-text">Kyzers Market</div>
+    <div class="nav-links">
+        <a class="nav-link" href="Kyzers_Market_Home.html ">Home</a>
+        <a class="nav-link" href="Kyzers_Market_Products.html">Products</a>
+        <a class="nav-link" href="Kyzers_Market_Faq.html">FAQ</a>
+        <a class="nav-link" href="Kyzers_Market_About.html">About</a>
+        <a class="nav-link active" href="#">Checkout</a>
+    </div>
+</nav>
+
+<div class="content reveal">
+    <h1>Kyzer Settings</h1>
+    <p class="subtitle">Secure payment • 24/7 support</p>
+
+    <div class="checkout-container">
+
+<!-- LEFT SIDE -->
+<div class="product-panel">
+
+    <div class="product-hero">
+        <img src="images/product1.jpg" alt="Product">
+        <div class="image-glow"></div>
+    </div>
+
+    <div class="product-details">
+        <span class="rating">★★★★★ 4.8 • 430+ customers</span>
+        <h3>Kyzer's Settings</h3>
+        <p>Premium TikTok Quality. Trusted by hundreds of customers. This pack is for those who want clean, smooth, and best the possible video quality.</p>
+    </div>
+
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="checkout-panel">
+
+    <div class="viewing-box">
+        <span class="online-dot"></span>2 people viewing right now
+    </div>
+
+    <h3>Choose Your Option</h3>
+
+    <div class="plan-list">
+
+        <label class="plan-card best-value">
+            <input type="radio" name="plan" value="quality_method" checked>
+            <span>📸 QUALITY METHOD</span>
+            <strong>£7.99</strong>
+        </label>
+
+    </div>
+
+    <input
+        type="email"
+        id="email"
+        class="checkout-input"
+        placeholder="Your email address"
+    >
+
+    <button id="buyButton" class="buy-button">
+        ⚡ Buy Now
+    </button>
+
+    <div class="checkout-icons">
+        <div>🔒 Secure Payment</div>
+        <div>⚡ Fast Delivery</div>
+    </div>
+</div>
+
+<script>
+const buyButton = document.getElementById("buyButton");
+
+const API_BASE =
+    window.location.hostname === "localhost"
+        ? "http://localhost:4242"
+        : "https://kyzers-market-backend.onrender.com";
+
+// prevent crashes if button doesn't exist
+if (buyButton) {
+    buyButton.addEventListener("click", async () => {
+
+        const emailEl = document.getElementById("email");
+        const planEl = document.querySelector('input[name="plan"]:checked');
+
+        const email = emailEl ? emailEl.value.trim() : "";
+        const selectedPlan = planEl ? planEl.value : null;
+
+        if (!email) {
+            alert("Please enter your email address.");
+            return;
+        }
+
+        if (!selectedPlan) {
+            alert("Please select a plan.");
+            return;
+        }
+
+        buyButton.disabled = true;
+        buyButton.textContent = "Processing...";
+
+        try {
+            const response = await fetch(`${API_BASE}/create-checkout-session`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    plan: selectedPlan
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                console.error("Stripe error:", data);
+                alert("Stripe session failed.");
+            }
+
+        } catch (err) {
+            console.error("Payment error:", err);
+            alert("Payment error. Try again.");
+        }
+
+        buyButton.disabled = false;
+        buyButton.textContent = "⚡ Buy Now";
+    });
+}
+
+/* ===== UI LOADER / PARTICLES SCRIPT ===== */
+
+window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
+    const particles = document.getElementById("particles");
+
+    setTimeout(() => {
+        if (loader) loader.classList.add("hidden");
+
+        const hero = document.querySelector(".hero");
+        if (hero) hero.classList.add("loaded");
+
+        document.querySelectorAll(".reveal").forEach((el, i) => {
+            setTimeout(() => el.classList.add("show"), i * 140);
+        });
+    }, 600);
+
+    if (particles) {
+        for (let i = 0; i < 50; i++) {
+            const p = document.createElement("div");
+            p.classList.add("particle");
+
+            const size = Math.random() * 5 + 2;
+            p.style.width = size + "px";
+            p.style.height = size + "px";
+            p.style.left = Math.random() * 100 + "%";
+            p.style.animationDuration = (Math.random() * 15 + 10) + "s";
+            p.style.animationDelay = (Math.random() * -20) + "s";
+            p.style.opacity = Math.random() * 0.5 + 0.2;
+
+            particles.appendChild(p);
+        }
+    }
+});
+</script>
