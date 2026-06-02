@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyzers Market</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================
+   BASE
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+    font-size:16px;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#050505;
+    color:#fff; 
+    overflow-x:hidden;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+}
+
+/* =========================
+   LOADER
+========================= */
+
+.loader{
+    position:fixed;
+    inset:0;
+    background:#050505;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:99999;
+    transition:opacity .7s ease, visibility .7s ease;
+}
+
+.loader.hidden{
+    opacity:0;
+    visibility:hidden;
+}
+
+.spinner{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    border:3px solid rgba(255,255,255,.1);
+    border-top:3px solid #7c3aed;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    min-height:100svh;
+    padding:120px 20px 60px;
+    position:relative;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    text-align:center;
+    overflow:hidden;
+
+    opacity:0;
+    transform:translateY(25px);
+    transition:1s ease;
+}
+
+.hero.loaded{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.95)),
+        url("rocketleague-bg.jpg");
+    background-size:cover;
+    background-position:center;
+    filter:blur(3px);
+    transform:scale(1.08);
+    z-index:-5;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:900px;
+    height:900px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(124,58,237,.18),transparent 70%);
+    filter:blur(120px);
+    z-index:-4;
+}
+
+.particles{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+}
+
+.particle{
+    position:absolute;
+    top:-20px;
+    border-radius:50%;
+    background:rgba(167,139,250,.35);
+    filter:blur(1px);
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    0%{transform:translateY(-20px); opacity:0;}
+    10%{opacity:1;}
+    100%{transform:translateY(120vh); opacity:0;}
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    position:fixed;
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(1100px,92%);
+    padding:14px 20px;
+    border-radius:16px;
+    background:rgba(10,10,10,.55);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.06);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    z-index:100;
+}
+
+.logo-text{
+    font-family:'Montserrat',sans-serif;
+    font-size:20px;
+    font-weight:700;
+}
+
+.nav-links{
+    display:flex;
+    gap:12px;
+}
+
+.nav-link{
+    text-decoration:none;
+    color:rgba(255,255,255,.75);
+    font-size:15px;
+    padding:10px 18px;
+    border-radius:12px;
+    transition:.25s ease;
+}
+
+.nav-link:hover{
+    color:#fff;
+    background:rgba(124,58,237,.08);
+}
+
+.nav-link.active{
+    color:#fff;
+    background:linear-gradient(180deg,rgba(124,58,237,.45),rgba(124,58,237,.22));
+}
+
+@media (max-width: 768px) {
+
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 14px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .nav-link {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+
+    .logo-text {
+        font-size: 18px;
+    }
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+    width:100%;
+    max-width:1100px;
+    padding:0 20px;
+}
+
+h1{
+    font-family:'Montserrat',sans-serif;
+    font-weight:800;
+    font-size:clamp(2.5rem,5vw,4rem);
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#b8b8b8;
+    margin-bottom:40px;
+}
+
+/* =========================
+   PRODUCTS (IMAGES ADDED)
+========================= */
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:24px;
+    margin-top:10px;
+}
+
+@media (max-width: 1000px){
+    .product-grid{
+        grid-template-columns:repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px){
+    .product-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+.product-card{
+    position:relative;
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;
+    overflow:hidden;
+    transition:.35s ease;
+    display:flex;
+    flex-direction:column;
+}
+
+.product-card:hover{
+    transform:translateY(-8px) scale(1.02);
+    border-color:rgba(124,58,237,.4);
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+
+/* IMAGE */
+.product-img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    background:rgba(255,255,255,.03);
+}
+
+/* CONTENT */
+.product-content{
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+/* TITLE */
+.product-title{
+    font-size:16px;
+    font-weight:600;
+}
+
+/* PRICE */
+.price{
+    font-size:18px;
+    font-weight:800;
+    color:#a78bfa;
+}
+
+/* BADGE */
+.badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+
+    padding:4px 8px;
+
+    border-radius:999px;
+
+    font-size:9px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+
+    color:#e9ddff;
+
+    background:rgba(18,18,18,.75);
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(167,139,250,.18);
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.25);
+
+    line-height:1;
+}
+
+/* BUTTON */
+.product-btn{
+    display:inline-block;
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#6d28d9,#7c3aed,#8b5cf6);
+    text-align:center;
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+}
+
+/* =========================
+   TRUST SECTION
+========================= */
+
+.trust-header{
+    margin-top:70px;
+    margin-bottom:25px;
+    text-align:left;
+}
+
+.trust-header h2{
+    font-family:'Montserrat',sans-serif;
+    font-size:28px;
+    font-weight:800;
+    margin-bottom:6px;
+}
+
+.trust-subtitle{
+    color:#b8b8b8;
+    font-size:14px;
+    margin-bottom:6px;
+}
+
+/* =========================
+   REVIEWS
+========================= */
+
+.reviews{
+    margin-top:10px;
+    text-align:left;
+}
+
+.review-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+
+.review-card{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:18px;
+}
+
+.stars{
+    color:#facc15;
+    margin-bottom:8px;
+}
+
+.review-text{
+    color:#d4d4d4;
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.review-user{
+    color:#a78bfa;
+    font-size:13px;
+    font-weight:600;
+}
+
+.product-btn.load{
+    margin-top:20px;
+    max-width:220px;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+.reveal{
+    opacity:0;
+    transform:translateY(20px);
+    transition:.8s ease;
+}
+
+.reveal.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="loader" id="loader">
+    <div class="spinner"></div>
+</div>
+
+<section class="hero" id="hero">
+
+<div class="particles" id="particles"></div>
+
+<nav class="navbar" id="navbar">
+    <div class="logo-text">Kyzers Market</div>
+
+    <div class="nav-links">
+        <a class="nav-link" href="Kyzers_Market_Home.html">Home</a>
+        <a class="nav-link active" href="#">Products</a>
+        <a class="nav-link" href="Kyzers_Market_Faq.html">FAQ</a>
+        <a class="nav-link" href="Kyzers_Market_About.html">About</a>
+    </div>
+</nav>
+
+<div class="content">
+
+<h1 class="reveal">Products</h1>
+
+<p class="subtitle reveal">Premium Rocket League products. Fast delivery.</p>
+
+<div class="product-grid">
+
+        <div class="product-card reveal">
+        <div class="badge">Best Seller</div>
+        <img class="product-img" src="images/product4.jpg" alt="Product">
+        <div class="product-content">
+            <div class="product-title">Kyzer Settings</div>
+            <div class="price">£0.49</div>
+
+            <a href="Kyzers_Market_Purchase2.html" class="product-btn">Buy Now</a>
+        </div>
+    </div>
+
+        <div class="product-card reveal">
+        <div class="badge">Top Rated</div>
+        <img class="product-img" src="images/product5.jpg" alt="Product">
+        <div class="product-content">
+            <div class="product-title">RL Accounts</div>
+            <div class="price">Starting at £4.99</div>
+
+            <a href="Kyzers_Market_Purchase1.html" class="product-btn">Buy Now</a>
+        </div>
+    </div>
+
+    <div class="product-card reveal">
+        <div class="badge">Popular</div>
+        <img class="product-img" src="images/product1.jpg" alt="Product">
+        <div class="product-content">
+            <div class="product-title">Quality Method</div>
+            <div class="price">£7.99</div>
+
+            <a href="Kyzers_Market_Purchase3.html" class="product-btn">Buy Now</a>
+        </div>
+    </div>
+
+<div class="product-card reveal">
+    <div class="badge">Best Value</div>
+
+    <img class="product-img" src="images/product2.jpg" alt="Product">
+
+    <div class="product-content">
+        <div class="product-title">GC/SSL Pack</div>
+        <div class="price">£3.99</div>
+
+        <a href="Kyzers_Market_Purchase4.html" class="product-btn">Buy Now</a>
+    </div>
+</div>
+
+</div>
+
+<div class="trust-header reveal">
+    <h2>What Our Customers Say - 457 Reviews</h2>
+    <div class="trust-subtitle">Rated 4.8/5 by 430+ verified reviews.</div>
+</div>
+
+<div class="reviews reveal">
+    <div class="review-grid" id="reviewGrid"></div>
+    <button id="loadMoreBtn" class="product-btn load">Load More</button>
+</div>
+
+</div>
+</section>
+
+<script>
+
+window.addEventListener("load", () => {
+
+    const loader = document.getElementById("loader");
+    const hero = document.getElementById("hero");
+    const navbar = document.getElementById("navbar");
+const particles = document.getElementById("particles");
+
+if (particles) {
+    for(let i = 0; i < 50; i++){
+        const p = document.createElement("div");
+        p.classList.add("particle");
+
+        const size = Math.random() * 5 + 2;
+
+        p.style.width = size + "px";
+        p.style.height = size + "px";
+
+        p.style.left = Math.random() * 100 + "%";
+        p.style.animationDuration = (Math.random() * 15 + 10) + "s";
+        p.style.animationDelay = (Math.random() * -20) + "s";
+        p.style.opacity = Math.random() * 0.5 + 0.2;
+
+        particles.appendChild(p);
+    }
+}
+
+    setTimeout(() => {
+        loader.classList.add("hidden");
+        hero.classList.add("loaded");
+        navbar.classList.add("loaded");
+
+        document.querySelectorAll(".reveal").forEach((el,i)=>{
+            setTimeout(()=>el.classList.add("show"), i*120);
+        });
+
+    },700);
+
+    const reviewGrid = document.getElementById("reviewGrid");
+    const loadMoreBtn = document.getElementById("loadMoreBtn");
+
+    const users = ["BUYER"];
+
+const verbs = [
+  "Very good",
+  "Good",
+  "Great",
+  "excellent",
+  "Insane",
+  "OP",
+  "Perfect",
+  "cheap",
+  "Highly recommend",
+  "recommend",
+  "would recommend",
+  "Would recommend",
+  "amazing",
+  "legit method", 
+  "works perfectly got",
+  "actually works",
+  "W i got a",
+  "I bought",
+  "Very helpful, i got",
+  "Best",
+  "best",
+  "fast",
+  "fast delivery",
+  "Instant",
+  "very fast delivery",
+  "easy",
+  "Fast delivery i bought",
+  "reliable",
+  "clean",
+  "solid",
+  "hard",
+  "Elite",
+  "top tier",
+  "10/10",
+  "tuff",
+  "crazy",
+  "GOATED",
+  "",
+  "goated",
+  "GOAT",
+  "W",
+  "w",
+  "+rep",
+  "helped a lot",
+  "helped",
+  "good product",
+  "such good",
+  "+rep",
+  "no issues",
+  "no problems",
+  "worth the price",
+  "worth it 100%",
+  "satisfied with",
+  "happy with it",
+  "very satisfied with",
+  "best products, got",
+  "very happy i got"
+];
+
+const subjects = [
+  "TikTok method",
+  "TikTok method",
+  "good method",
+  "qual",
+  "qual method",
+  "quality method",
+  "pack",
+  "GC/SSL pack",
+  "SSL pack",
+  "ssl acc",
+  "ssl pack",
+  "GC pack",
+  "settings",
+  "rl settings",
+  "camera settings",
+  "controller settings",
+  "sensitivity settings",
+  "accounts",
+  "acc",
+  "rocket league account",
+  "rl account",
+  "rl acc",
+  "GC account",
+  "SSL account",
+  "high rank account",
+  "tag acc",
+  "champ acc",
+  "champion account",
+  "ranked account",
+  "RL account",
+  "ranked ready",
+  "good service",
+  "ranked account",
+  "ranked acc",
+  "good kyzer settings",
+  "kyzer settings",
+  "settings",
+  "very good settings",
+  "setup",
+  "fa",
+  "hes legit",
+  "he didnt scam",
+  "good service",
+  " ",
+  "full access",
+  "good",
+  "so good",
+  "service",
+  "full access account",
+];
+
+    const total = 100;
+    const batch = 6;
+    let index = 1;
+
+    const used = new Set();
+
+    function stars(){
+        return Math.random() > 0.2 ? "★★★★★" : "★★★★☆";
+    }
+
+    function generateUnique(){
+        let text;
+        let tries = 0;
+
+        do {
+            const v = verbs[Math.floor(Math.random()*verbs.length)];
+            const s = subjects[Math.floor(Math.random()*subjects.length)];
+            text = `${v} ${s}`;
+            tries++;
+        } while(used.has(text) && tries < 20);
+
+        used.add(text);
+        return text;
+    }
+
+    function makeReview(i){
+        const user = users[Math.floor(Math.random()*users.length)];
+
+        return `
+        <div class="review-card">
+            <div class="stars">${stars()}</div>
+            <div class="review-text">${generateUnique()}</div>
+            <div class="review-user">— ${user}${i}</div>
+        </div>`;
+    }
+
+    function load(){
+        const end = Math.min(index + batch, total);
+
+        for(let i=index;i<end;i++){
+            reviewGrid.innerHTML += makeReview(i);
+        }
+
+        index = end;
+
+        if(index >= total){
+            loadMoreBtn.style.display = "none";
+        }
+    }
+
+    loadMoreBtn.addEventListener("click", load);
+    load();
+
+});
+
+</script>
+
+</body>
+</html>
