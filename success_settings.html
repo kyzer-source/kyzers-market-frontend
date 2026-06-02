@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Successful - Kyzers Market</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"> 
+
+<style>
+:root{
+    --bg:#050507;
+    --card:rgba(255,255,255,0.04);
+    --border:rgba(255,255,255,0.08);
+    --text:#ffffff;
+    --muted:#a1a1aa;
+    --purple:#7c3aed;
+    --green:#22c55e;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(124,58,237,0.25), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(34,197,94,0.10), transparent 40%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+}
+
+.container{
+    width:100%;
+    max-width:560px;
+}
+
+.card{
+    position:relative;
+    padding:32px;
+    border-radius:20px;
+    background:var(--card);
+    border:1px solid var(--border);
+    backdrop-filter:blur(18px);
+    box-shadow:0 25px 80px rgba(0,0,0,0.6);
+    overflow:hidden;
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    padding:1px;
+    border-radius:20px;
+    background:linear-gradient(
+        135deg,
+        rgba(124,58,237,0.6),
+        rgba(34,197,94,0.3),
+        transparent
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    pointer-events:none;
+}
+
+.badge{
+    display:inline-flex;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:600;
+    background:rgba(34,197,94,0.12);
+    border:1px solid rgba(34,197,94,0.25);
+    color:var(--green);
+    margin-bottom:14px;
+}
+
+h1{
+    font-size:24px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+p{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.5;
+}
+
+.section-title{
+    margin-top:22px;
+    font-size:13px;
+    font-weight:600;
+    color:#c4b5fd;
+    margin-bottom:10px;
+}
+
+.box{
+    padding:16px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
+    margin-top:12px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    margin-bottom:6px;
+}
+
+.row span{ color:var(--muted); }
+.row strong{ color:var(--text); font-weight:600; }
+
+.settings{
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size:12px;
+    line-height:1.6;
+    color:#e5e7eb;
+    white-space:pre-line;
+}
+
+.discord{
+    margin-top:18px;
+    padding:14px;
+    border-radius:14px;
+    background:rgba(124,58,237,0.08);
+    border:1px solid rgba(124,58,237,0.25);
+    font-size:13px;
+    color:#ddd;
+}
+
+.btn{
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    margin-top:20px;
+    padding:12px 16px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#7c3aed,#6d28d9);
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.2s ease;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.small{
+    margin-top:12px;
+    font-size:12px;
+    color:#6b7280;
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <div class="badge">✅ Payment Confirmed</div>
+
+        <h1>Thank you for your purchase</h1>
+        <p>Your order has been processed and your settings are ready below.</p>
+
+        <div class="section-title">Order Summary</div>
+
+<<<<<<< HEAD
+        <div class="box" id="orderBox">
+            Loading order details...
+=======
+        <div class="box">
+            <div class="row">
+                <span>Product</span>
+                <strong>Kyzers Settings</strong>
+            </div>
+            <div class="row">
+                <span>Status</span>
+                <strong>Delivered</strong>
+            </div>
+>>>>>>> 01e2fff (fix dependencies)
+        </div>
+
+        <div class="section-title">Your Settings</div>
+
+        <div class="box settings">
+CAMERA SETTINGS
+FOV: 110
+Height: 100
+Pitch: -5
+Distance: 280
+Stiffness: 0.55
+Swivel Speed: 4.5
+Transition Speed: 1.7
+
+CONTROLS SETTINGS
+Steering Sensitivity: 1.32
+Aerial Sensitivity: 1.32
+Controller Deadzone: 0.08
+Dodge Deadzone: 0.40
+        </div>
+
+        <div class="discord">
+            💬 Need help? Message <b>@kyzer_rl</b> on Discord
+        </div>
+
+<<<<<<< HEAD
+        <a class="btn" href="Kyzers_Market_Products.html">
+            Back to Store
+        </a>
+
+    </div>
+</div>
+
+<script>
+const API_BASE = "https://kyzers-market-backend.onrender.com";
+
+async function loadOrder() {
+    const box = document.getElementById("orderBox");
+
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+
+    if (!sessionId) {
+        box.textContent = "Order not found";
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/session/${sessionId}`);
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch session");
+        }
+
+        const data = await res.json();
+
+        box.innerHTML = `
+            <div class="row">
+                <span>Product</span>
+                <strong>Kyzers Settings</strong>
+            </div>
+
+            <div class="row">
+                <span>Order ID</span>
+                <strong>${data.orderId || "N/A"}</strong>
+            </div>
+
+            <div class="row">
+                <span>Email</span>
+                <strong>${data.email || "N/A"}</strong>
+            </div>
+
+            <div class="row">
+                <span>Status</span>
+                <strong>Delivered</strong>
+            </div>
+        `;
+
+    } catch (err) {
+        console.error(err);
+        box.textContent = "Failed to load order details";
+    }
+}
+
+loadOrder();
+</script>
+=======
+        <a class="btn" href="Kyzers_Market_Products.html" rel="noopener noreferrer">
+            Back to Store
+        </a>
+
+        <div class="small">
+            If anything is missing, contact support and we'll fix it quickly.
+        </div>
+
+    </div>
+</div>
+>>>>>>> 01e2fff (fix dependencies)
+
+</body>
+</html>
