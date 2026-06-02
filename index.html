@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyzers Market</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================
+   BASE
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+    font-size:16px;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#050505;
+    color:#fff;
+    overflow-x:hidden;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+}
+
+/* =========================
+   LOADER (CLEAN)
+========================= */
+
+.loader{
+    position:fixed;
+    inset:0;
+    background:#050505;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:99999;
+    transition:opacity .7s ease, visibility .7s ease;
+}
+
+.loader.hidden{
+    opacity:0;
+    visibility:hidden;
+}
+
+.spinner{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    border:3px solid rgba(255,255,255,.1);
+    border-top:3px solid #7c3aed;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+/* =========================
+   HERO (YOUR FULL ORIGINAL STYLE RESTORED)
+========================= */
+
+.hero{
+    min-height:100svh;
+    padding:120px 20px 60px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow:hidden;
+
+    opacity:0;
+    transform:translateY(25px);
+    transition:1s ease;
+}
+
+.hero.loaded{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* BACKGROUND EFFECTS */
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(rgba(0,0,0,.78),rgba(0,0,0,.92)),
+        url("rocketleague-bg.jpg");
+    background-size:cover;
+    background-position:center;
+    filter:blur(3px);
+    transform:scale(1.08);
+    z-index:-5;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:900px;
+    height:900px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(124,58,237,.18),transparent 70%);
+    filter:blur(120px);
+    z-index:-4;
+}
+
+.hero-bg-overlay{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at center,rgba(124,58,237,.10),transparent 60%);
+    z-index:-3;
+}
+
+.hero-grid{
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+    background-size:60px 60px;
+    opacity:.35;
+}
+
+.particles{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+}
+
+.particle{
+    position:absolute;
+    top:-20px;
+    border-radius:50%;
+    background:rgba(167,139,250,.35);
+    filter:blur(1px);
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    0%{transform:translateY(-20px); opacity:0;}
+    10%{opacity:1;}
+    100%{transform:translateY(120vh); opacity:0;}
+}
+
+/* =========================
+   NAVBAR (FULL RESTORED STYLE)
+========================= */
+
+.navbar{
+    position:fixed;
+    top:16px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(1100px,92%);
+    padding:14px 20px;
+    border-radius:16px;
+    background:rgba(10,10,10,.55);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.06);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    z-index:100;
+
+    opacity:0;
+    transform:translate(-50%,-20px);
+    transition:1s ease;
+}
+
+.navbar.loaded{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+.logo-text{
+    font-family:'Montserrat',sans-serif;
+    font-size:20px;
+    font-weight:700;
+}
+
+.nav-links {
+    display:flex;
+    gap:12px;
+}
+
+.nav-link{
+    text-decoration:none;
+    color:rgba(255,255,255,.75);
+    font-size:15px;
+    padding:10px 18px;
+    border-radius:12px;
+    transition:.25s ease;
+}
+
+.nav-link:hover{
+    color:#fff;
+    background:rgba(124,58,237,.08);
+}
+
+.nav-link.active{
+    color:#fff;
+    background:linear-gradient(180deg,rgba(124,58,237,.45),rgba(124,58,237,.22));
+    border:1px solid rgba(167,139,250,.18);
+}
+
+@media (max-width: 768px) {
+
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 14px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .nav-link {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+
+    .logo-text {
+        font-size: 18px;
+    }
+}
+
+/* =========================
+   CONTENT (ALL FEATURES RESTORED)
+========================= */
+
+.content{
+    position:relative;
+    z-index:5;
+    width:100%;
+    max-width:1100px;
+    padding:0 20px;
+}
+
+.reveal{
+    opacity:0;
+    transform:translateY(25px);
+    transition:.9s ease;
+}
+
+.reveal.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.trusted{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 24px;
+    border-radius:999px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+    margin-bottom:35px;
+}
+
+.trusted span{
+    color:#facc15;
+}
+
+h1{
+    font-family:'Montserrat',sans-serif;
+    font-weight:800;
+    font-size:clamp(2.8rem,6vw,6.5rem);
+    line-height:1.05;
+}
+
+.gradient{
+    background:linear-gradient(90deg,#fff,#b794f6);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+    margin-top:20px;
+    color:#b8b8b8;
+    font-size:clamp(1rem,2vw,1.25rem);
+    max-width:700px;
+    margin-inline:auto;
+}
+
+/* =========================
+   BUTTONS (FULL RESTORED PREMIUM STYLE)
+========================= */
+
+.hero-buttons{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    margin-top:40px;
+    flex-wrap:wrap;
+}
+
+.buy-btn,
+.secondary-btn{
+    position:relative;
+    overflow:hidden;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px 42px;
+    border-radius:999px;
+    text-decoration:none;
+    color:#fff;
+    font-weight:600;
+    transition:transform .45s cubic-bezier(.19,1,.22,1),
+               box-shadow .45s ease;
+}
+
+/* BUY BUTTON */
+.buy-btn{
+    background:linear-gradient(135deg,#6d28d9,#7c3aed,#8b5cf6);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 0 20px rgba(124,58,237,.25);
+}
+
+.buy-btn::before{
+    content:"";
+    position:absolute;
+    top:-50%;
+    left:-150%;
+    width:80%;
+    height:220%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+    transform:rotate(25deg);
+    transition:left .9s ease;
+}
+
+.buy-btn:hover::before{
+    left:170%;
+}
+
+.buy-btn:hover{
+    transform:translateY(-5px) scale(1.04);
+    box-shadow:0 0 25px rgba(167,139,250,.6),0 0 80px rgba(124,58,237,.3);
+}
+
+/* SECONDARY BUTTON */
+.secondary-btn{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.secondary-btn:hover{
+    transform:translateY(-5px) scale(1.04);
+}
+
+/* =========================
+   STATS (RESTORED)
+========================= */
+
+.stats{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:50px;
+    flex-wrap:wrap;
+}
+
+.stat{
+    padding:12px 18px;
+    border-radius:14px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+    <div class="spinner"></div>
+</div>
+
+<section class="hero" id="hero">
+<div class="particles" id="particles"></div>
+
+<div class="hero-bg-overlay"></div>
+<div class="hero-grid"></div>
+
+<nav class="navbar" id="navbar">
+    <div class="logo-text">Kyzers Market</div>
+    <div class="nav-links">
+        <a class="nav-link active" href="#">Home</a>
+        <a class="nav-link" href="Kyzers_Market_Products.html">Products</a>
+        <a class="nav-link" href="Kyzers_Market_Faq.html">FAQ</a>
+        <a class="nav-link" href="Kyzers_Market_About.html">About</a>
+    </div>
+</nav>
+
+<div class="content"> 
+
+    <div class="trusted reveal"><span>★★★★★</span> Rated 4.8/5 by 430+ customers</div>
+
+    <h1 class="reveal">
+        DOMINATE<br>
+        <span class="gradient">EVERY MATCH</span>
+    </h1>
+
+    <p class="subtitle reveal">
+        Premium Rocket League products designed to improve your gameplay.
+        Fast delivery. Trusted by hundreds players worldwide.
+    </p>
+
+    <div class="hero-buttons reveal">
+        <a href="Kyzers_Market_Products.html" class="buy-btn">🛒 Buy Now</a>
+        <a href="Kyzers_Market_Products.html" class="secondary-btn">View Products</a>
+    </div>
+
+    <div class="stats reveal">
+        <div class="stat">⚡ Fast Delivery</div>
+        <div class="stat">🛡 Secure Checkout</div>
+        <div class="stat">💬 24/7 Support</div>
+    </div>
+
+</div>
+
+</section>
+
+<script>
+window.addEventListener("load", () => {
+
+    const loader = document.getElementById("loader");
+    const hero = document.getElementById("hero");
+    const navbar = document.getElementById("navbar");  
+    const particles = document.getElementById("particles");
+
+for(let i = 0; i < 50; i++){
+
+    const p = document.createElement("div");
+    p.classList.add("particle");
+
+    const size = Math.random() * 5 + 2;
+
+    p.style.width = size + "px";
+    p.style.height = size + "px";
+
+    p.style.left = Math.random() * 100 + "%";
+    p.style.animationDuration = (Math.random() * 15 + 10) + "s";
+    p.style.animationDelay = (Math.random() * -20) + "s";
+    p.style.opacity = Math.random() * 0.5 + 0.2;
+
+    particles.appendChild(p);
+}
+
+    setTimeout(() => {
+
+        loader.classList.add("hidden");
+        hero.classList.add("loaded");
+        navbar.classList.add("loaded");
+
+        document.querySelectorAll(".reveal").forEach((el, i) => {
+            setTimeout(() => {
+                el.classList.add("show");
+            }, i * 180);
+        });
+
+    }, 700);
+
+});
+</script>
+
+</body>
+</html>
